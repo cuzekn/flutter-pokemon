@@ -125,8 +125,15 @@ class Settings extends StatelessWidget {
   }
 }
 
-class ThemeModeSelectionPage extends StatelessWidget {
+class ThemeModeSelectionPage extends StatefulWidget {
   const ThemeModeSelectionPage({super.key});
+
+  @override
+  _ThemeModeSelectionPageState createState() => _ThemeModeSelectionPageState();
+}
+
+class _ThemeModeSelectionPageState extends State<ThemeModeSelectionPage> {
+  ThemeMode _current = ThemeMode.system;
 
   @override
   Widget build(BuildContext context) {
@@ -142,21 +149,21 @@ class ThemeModeSelectionPage extends StatelessWidget {
             ),
             RadioListTile<ThemeMode>(
               value: ThemeMode.system,
-              groupValue: ThemeMode.system,
+              groupValue: _current,
               title: const Text('System'),
               onChanged: (val) => {},
             ),
             RadioListTile<ThemeMode>(
               value: ThemeMode.dark,
-              groupValue: ThemeMode.system,
+              groupValue: _current,
               title: const Text('Dark'),
-              onChanged: (val) => {},
+              onChanged: (val) => {setState(() => _current = val!)},
             ),
             RadioListTile<ThemeMode>(
-              value: ThemeMode.dark,
-              groupValue: ThemeMode.system,
+              value: ThemeMode.light,
+              groupValue: _current,
               title: const Text('Light'),
-              onChanged: (val) => {},
+              onChanged: (val) => {setState(() => _current = val!)},
             ),
           ],
         ),

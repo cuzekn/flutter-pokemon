@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends StatefulWidget {
   const Settings({super.key});
+  @override
+  _SettingsState createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  ThemeMode _themeMode = ThemeMode.system;
   @override
   Widget build(BuildContext context) {
     return ListView(children: [
       ListTile(
         leading: const Icon(Icons.lightbulb),
         title: const Text('Dark/Light Mode'),
-        onTap: () => {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const ThemeModeSelectionPage(),
-          )),
+        trailing: Text((_themeMode == ThemeMode.system)
+            ? 'System'
+            : (_themeMode == ThemeMode.dark ? 'Dark' : 'Light')),
+        onTap: () async {
+          var ret = await Navigator.of(context).push<ThemeMode>(
+            MaterialPageRoute(
+              builder: (context) => ThemeModeSelectionPage(mode: _themeMode),
+            ),
+          );
+          setState(() => _themeMode = ret!);
         },
       ),
     ]);
@@ -19,14 +31,24 @@ class Settings extends StatelessWidget {
 }
 
 class ThemeModeSelectionPage extends StatefulWidget {
-  const ThemeModeSelectionPage({super.key});
+  const ThemeModeSelectionPage({
+    Key? key,
+    required this.mode,
+  }) : super(key: key);
+  final ThemeMode mode;
 
   @override
   _ThemeModeSelectionPageState createState() => _ThemeModeSelectionPageState();
 }
 
 class _ThemeModeSelectionPageState extends State<ThemeModeSelectionPage> {
-  ThemeMode _current = ThemeMode.system;
+  late ThemeMode _current;
+
+  @override
+  void initState() {
+    super.initState();
+    _current = widget.mode;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +59,14 @@ class _ThemeModeSelectionPageState extends State<ThemeModeSelectionPage> {
             ListTile(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pop<ThemeMode>(context, _current),
               ),
             ),
             RadioListTile<ThemeMode>(
               value: ThemeMode.system,
               groupValue: _current,
               title: const Text('System'),
-              onChanged: (val) => {},
+              onChanged: (val) => {setState(() => _current = val!)},
             ),
             RadioListTile<ThemeMode>(
               value: ThemeMode.dark,

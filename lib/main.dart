@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon/poke_detail.dart';
 import 'package:pokemon/settings.dart';
+import 'package:pokemon/utils/theme_mode.dart';
 
 void main() {
   runApp(const MyApp());

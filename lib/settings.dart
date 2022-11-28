@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -6,8 +7,34 @@ class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
 }
 
+  Future<void> saveThemeMode(ThemeMode mode) async{
+    final pref = await SharedPreferences.getInstance();
+    pref.setString(mode.key, mode.name);
+  }
+
+  Future<ThemeMode> loadThemeMode() async{
+    final pref = await SharedPreferences.getInstance();
+    var defaultTheme;
+    return toMode(pref.getString(defaultTheme.key) ?? defaultTheme.name);
+  }
+
+  ThemeMode toMode(String str) {
+    return ThemeMode.values.where((val) => val.name == str).first;
+  }
+
+  extension ThemeModeEx on ThemeMode {
+    String get key => toString().split('.').first;
+    String get name => toString().split('.').last;
+  }
 class _SettingsState extends State<Settings> {
   ThemeMode _themeMode = ThemeMode.system;
+
+  @override
+  void initState() {
+    super.initState();
+    loadThemeMode().then((val) => setState(() => _themeMode = val));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(children: [
@@ -24,6 +51,7 @@ class _SettingsState extends State<Settings> {
             ),
           );
           setState(() => _themeMode = ret!);
+          await saveThemeMode(_themeMode);
         },
       ),
     ]);

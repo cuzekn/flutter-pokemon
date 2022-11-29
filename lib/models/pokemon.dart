@@ -1,3 +1,14 @@
+import 'package:flutter/material.dart';
+
+class PokemonsNotifier extends ChangeNotifier {
+  final Map<int, Pokemon> _pokeMap = {};
+  Map<int, Pokemon> get pokes => _pokeMap;
+  void addPoke(Pokemon poke) {
+    _pokeMap[poke.id] = poke;
+    notifyListeners();
+  }
+}
+
 class Pokemon {
   final int id;
   final String name;

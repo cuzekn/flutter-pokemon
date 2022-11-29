@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon/models/pokemon.dart';
 import 'package:pokemon/models/theme_mode.dart';
-import 'package:pokemon/poke_detail.dart';
+import 'package:pokemon/poke_list_item.dart';
 import 'package:pokemon/settings.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,8 +10,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences pref = await SharedPreferences.getInstance();
   final themeModeNotifier = ThemeModeNotifier(pref);
-  runApp(ChangeNotifierProvider(
-    create: (context) => themeModeNotifier,
+  final pokemonsNotifier = PokemonsNotifier();
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<ThemeModeNotifier>(
+        create: (context) => themeModeNotifier,
+      ),
+      ChangeNotifierProvider<PokemonsNotifier>(
+        create: (context) => pokemonsNotifier,
+      )
+    ],
     child: const MyApp(),
   ));
 }
@@ -66,44 +75,6 @@ class _TopPageState extends State<TopPage> {
               label: 'settings',
             )
           ]),
-    );
-  }
-}
-
-class PokeListItem extends StatelessWidget {
-  const PokeListItem({Key? key, required this.index}) : super(key: key);
-  final int index;
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        width: 80,
-        decoration: BoxDecoration(
-          color: Colors.yellow.withOpacity(.5),
-          borderRadius: BorderRadius.circular(10),
-          image: const DecorationImage(
-            fit: BoxFit.fitWidth,
-            image: NetworkImage(
-              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
-            ),
-          ),
-        ),
-      ),
-      title: const Text(
-        'Pikachu',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      subtitle: const Text(
-        '⚡️electric',
-      ),
-      trailing: const Icon(Icons.navigate_next),
-      onTap: () => {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (BuildContext context) => const PokeDetail(),
-          ),
-        ),
-      },
     );
   }
 }

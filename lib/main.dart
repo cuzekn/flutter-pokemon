@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon/models/pokemon.dart';
 import 'package:pokemon/models/theme_mode.dart';
-import 'package:pokemon/poke_list_item.dart';
+import 'package:pokemon/poke_list.dart';
 import 'package:pokemon/settings.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,18 +75,6 @@ class _TopPageState extends State<TopPage> {
               label: 'settings',
             )
           ]),
-    );
-  }
-}
-
-class PokeList extends StatelessWidget {
-  const PokeList({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      itemCount: 898,
-      itemBuilder: (context, index) => PokeListItem(index: index),
     );
   }
 }
